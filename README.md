@@ -2,7 +2,7 @@
 # goneIn60Seconds
 UCD Bootcamp Project 2
 
-# Project Description
+## Project Description
 goneIn60Seconds is a community social media platform with an emphasis on executing searches related to code with room to expand for more topics. 
 
 ## User Story
@@ -23,14 +23,14 @@ goneIn60Seconds is a community social media platform with an emphasis on executi
         > Then I am logged into my user profile, and am alerted I have successfully logged in
     * When I am logged in
         > Then I am able to view my profile and make posts/comments
-    * When I click "new post"
+    * When I am logged in and click "new post"
         > Then I am presented with a dialogue asking for a post title, and subject
-    * When I submit a new post
+    * When I am logged in and submit a new post
         > Then that post (title, subject, date/time), is saved and posted onto the main page
-    * When I click comment on a post
+    * When I am logged in and click comment on a post
         > Then I am presented with a dialogue asking for my comment
-    * When 
-        > Then
+    * When I click on a user/my username
+        > Then I am taken to a profile page displaying that user's posts and comments
 
 
 ## Project Reqs:
@@ -49,12 +49,14 @@ Must be interactive (i.e., accept and respond to user input)
 Must meet good-quality coding standards (file structure, best practices, etc.)
 Must have a professional README (unique name, description, link to the deployed app)
 
-# Team Members
+## Team Members
 Rob Gould 
 Henry Bell 
 Suraj Singh
 Matthew Chatman
 
-# Kanban Link
+## Kanban Link
 https://github.com/users/rg1202/projects/1
 
+## WireFrame"
+![WireFrame](./Dev/WireFrame.png)
