@@ -3,35 +3,34 @@
 UCD Bootcamp Project 2
 
 # Project Description
-goneIn60Seconds is a community social media platform with an emphasis on executing searches related to code
-with room to expand for more topics. 
+goneIn60Seconds is a community social media platform with an emphasis on executing searches related to code with room to expand for more topics. 
 
 ## User Story
-As A software dev
-    I Want a dedicated coding blog site
-        So That I can converse and share tips on coding related topics
+* As A software dev
+    * I Want a dedicated coding blog site  
+        * So That I can converse and share tips on coding related topics
 
 ## Acceptance Criteria
-Given a blog website
+* Given a blog website
 
-    When open the website
-        Then I am brought to a main screen with a series of most recent posts
-    When I attempt to log in
-        Then I am presented with a log in page where I am asked for my username and password
-    When I enter incorrect login credentials
-        Then I am provided an error and am unable to log in
-    When I enter correct login credentials
-        Then I am logged into my user profile, and am alerted I have successfully logged in
-    When I am logged in
-        Then I am able to view my profile and make posts/comments
-    When I click "new post"
-        Then I am presented with a dialogue asking for a post title, and subject
-    When I submit a new post
-        Then that post (title, subject, date/time), is saved and posted onto the main page
-    When I click comment on a post
-        Then I am presented with a dialogue asking for my comment
-    When 
-        Then 
+    * When I open the website
+        > Then I am brought to a main screen with a series of most recent posts
+    * When I attempt to log in
+        > Then I am presented with a log in page where I am asked for my username and password
+    * When I enter incorrect login credentials
+        > Then I am provided an error and am unable to log in
+    * When I enter correct login credentials
+        > Then I am logged into my user profile, and am alerted I have successfully logged in
+    * When I am logged in
+        > Then I am able to view my profile and make posts/comments
+    * When I click "new post"
+        > Then I am presented with a dialogue asking for a post title, and subject
+    * When I submit a new post
+        > Then that post (title, subject, date/time), is saved and posted onto the main page
+    * When I click comment on a post
+        > Then I am presented with a dialogue asking for my comment
+    * When 
+        > Then
 
 
 ## Project Reqs:
