@@ -23,7 +23,7 @@ Post.init(
         user_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'user', // This is the name of the table
+                model: 'user',
                 key: 'id'
             }
         }
