@@ -11,6 +11,7 @@
 <body>
   <div >
     <header>
+      <h1 id="title">BlogSite!</h1>
       <nav>
         {{#if logged_in}}
         <a href="/profile">profile</a> |
@@ -20,9 +21,11 @@
         {{/if}}
       </nav>
     </header>
+
     <main>
       {{{ body }}}
     </main>
+    
     <footer>
       
     </footer>
