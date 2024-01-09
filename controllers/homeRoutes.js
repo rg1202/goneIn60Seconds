@@ -11,19 +11,14 @@ router.get('/', async (req, res) => {
         model: User,
         attributes: ['name'],
       },
-    ],
-  });
-  const commentData = await Comment.findAll({
-    include: [
       {
-        model: User,
-        attributes: ['name'],
-      },
+        model: Comment,
+        attributes: ['comment_body', 'user_id'],
+      }
     ],
   });
   const posts = postData.map((post) => post.get({ plain: true }));
-  const comments = commentData.map((comment) => comment.get({ plain: true }));
-  res.render('homepage', { posts, comments });
+  res.render('homepage', { posts });
 });
 
 router.get('/login', (req, res) => {

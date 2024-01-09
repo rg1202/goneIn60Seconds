@@ -3,6 +3,10 @@
     <h2 class="postTitle">{{this.post_title}}</h2>
     <p class="postBody">{{this.post_body}}</p>
     <p class="postAuthor">{{user.name}}</p>
+    {{#each comments}}
+        <p class="comment">{{this.comment_body}}</p>
+        {{!-- TODO: Figure out how to render comment author. Not currently functional --}}
+        <p class="commentAuthor">{{user.name}}</p>
+    {{/each}}
 </div>
 {{/each}}
-```
