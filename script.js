@@ -1,4 +1,4 @@
-const socket = io('http://localhost:3001')
+const socket = io('http://localhost:3000')
   const messageContainer = document.getElementById('message-container')
   const messageForm = document.getElementById('send-container')
   const messageInput = document.getElementById('message-input')
@@ -25,15 +25,20 @@ const socket = io('http://localhost:3001')
 
     );
 
-  messageForm.addEventListener('submit', e => {
-    e.preventDefault()
-    const message = messageInput.value
-    appendMessage(`You: ${message}`)
-    socket.emit('send-chat-message', message)
-    messageInput.value = ''
-  }
+    messageForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const message = messageInput.value.trim(); // Trim whitespace from the message
+    
+      if (message) {
+        appendMessage(`You: ${message}`);
+        socket.emit('send-chat-message', message);
+        messageInput.value = '';
+      } else {
+        alert("Chat message cannot be blank."); // Display an alert if the message is empty
+      }
+    }
+    );
       
-        );  
 
   function appendMessage(message) {
     const messageElement = document.createElement('div')
