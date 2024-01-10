@@ -1,0 +1,13 @@
+<h2 class="profileUserName">{{user.name}}</h2>
+
+<div class="postsContainer">
+    {{#each user.posts}}
+        {{> post}}
+    {{/each}}
+</div>
+
+<div class="ProfileCommentsContainer">
+    {{#each user.comments}}
+        {{this.comment_body}}
+    {{/each}}
+</div>
