@@ -45,3 +45,5 @@ const socket = io('http://localhost:3001')
     messageElement.innerText = message
     messageContainer.append(messageElement)
   }
+
+  console.log(app)

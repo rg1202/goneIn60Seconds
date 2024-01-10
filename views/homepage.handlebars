@@ -3,3 +3,9 @@
         {{> post}}
     {{/each}}
 </div>
+
+{{#if logged_in}}
+    <div id="chat-container"></div>
+        {{> chat}}
+    </div>
+{{/if}}
