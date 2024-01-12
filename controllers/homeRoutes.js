@@ -15,9 +15,10 @@ router.get('/', async (req, res) => {
       }
     ],
   });
+  const loggedUser = req.session.user_id
   const posts = postData.map((post) => post.get({ plain: true }));
   const logged_in = req.session.logged_in
-  res.render('homepage', { posts, logged_in });
+  res.render('homepage', { posts, logged_in, loggedUser });
 });
 
 router.get('/login', (req, res) => {
