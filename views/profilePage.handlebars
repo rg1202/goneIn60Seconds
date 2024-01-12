@@ -1,5 +1,9 @@
 <h2 class="profileUserName">{{user.name}}</h2>
 
+{{#if logged_in}}
+    {{> postbox}}
+{{/if}}
+
 <div class="postsContainer">
     {{#each user.posts}}
         {{> post}}
@@ -11,7 +15,3 @@
         {{this.comment_body}}
     {{/each}}
 </div>
-
-{{#if logged_in}}
-    {{> postbox}}
-{{/if}}

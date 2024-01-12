@@ -12,7 +12,13 @@ router.get('/', async (req, res) => {
       {
         model: Comment,
         attributes: ['comment_body', 'user_id'],
+        order: [
+          ['id', 'DESC']
+        ],
       }
+    ],
+    order: [
+      ['id', 'DESC']
     ],
   });
   const loggedUser = req.session.user_id
