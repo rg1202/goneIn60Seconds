@@ -40,7 +40,7 @@ goneIn60Seconds is a community social media platform with an emphasis on executi
 - Must have a folder structure that meets the MVC paradigm *
 - Must protect API keys and sensitive information with environment variables *
 - Must meet good-quality coding standards (file structure, best practices, etc.) *
-- Must have both GET and POST routes for retrieving and adding new data
+- Must have both GET and POST routes for retrieving and adding new data *
 - Must use at least one new library, package, or technology that we haven’t discussed
 - Must include authentication (express-session and cookies)
 - Must be deployed using Heroku (with data)
