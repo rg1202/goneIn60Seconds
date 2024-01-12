@@ -11,3 +11,7 @@
         {{this.comment_body}}
     {{/each}}
 </div>
+
+{{#if logged_in}}
+    {{> postbox}}
+{{/if}}
