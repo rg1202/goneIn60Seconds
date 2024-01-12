@@ -75,4 +75,6 @@ io.on('connection', socket => {
   })
 })
 
-server.listen(PORT, () => console.log(`Listening to ${PORT}`));
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => console.log('Now listening'));
+});
