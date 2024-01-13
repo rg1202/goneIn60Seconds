@@ -21,7 +21,10 @@ db.User = require('./user')(sequelize, Sequelize);
 db.Message = require('./message')(sequelize, Sequelize); // Assuming you have a 'message.js'
 
 // Set up associations
-db.User.hasMany(db.Message);
-db.Message.belongsTo(db.User);
+db.User.hasMany(db.Message, { foreignKey: 'senderId', as: 'SentMessages' });
+db.Message.belongsTo(db.User, { foreignKey: 'senderId', as: 'Sender' });
+
+db.User.hasMany(db.Message, { foreignKey: 'receiverId', as: 'ReceivedMessages' });
+db.Message.belongsTo(db.User, { foreignKey: 'receiverId', as: 'Receiver' });
 
 module.exports = db;

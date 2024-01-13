@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
               key: 'id',       // 'id' refers to column name in Users table
           }
       }
-      // You can add more fields as needed
+      // more fields as needed
   });
 
   return Message;
