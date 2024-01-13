@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt')
 const db = require('./models');
 const session = require('express-session');
+const helpers = require('./utils/helpers');
 
 // Set up Handlebars.js engine with custom helpers
 const hbs = exphbs.create({ helpers });
