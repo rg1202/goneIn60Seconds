@@ -1,0 +1,10 @@
+<h1>{{username}}'s Profile</h1>
+<form action="/profile/update" method="post">
+    <!-- Display and edit user demographic information -->
+    <input type="text" name="name" value="{{name}}">
+    <input type="email" name="email" value="{{email}}">
+    <input type="text" name="location" value="{{location}}">
+    <input type="number" name="age" value="{{age}}">
+    <!-- Add other fields as necessary -->
+    <button type="submit">Update Profile</button>
+</form>

@@ -5,13 +5,23 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt')
 const db = require('./models');
 const session = require('express-session');
+const exphbs  = require('express-handlebars');
 
 const app = express();
 const port = process.env.PORT || 3002;
 
+// Set up Handlebars
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
+
+// Set up the public directory
+app.use(express.static('public'));
+
+// Set up body-parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Set up express-session middleware
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -23,6 +33,60 @@ app.use(session({
     }   
 }));
 
+// landing page
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+// profile page
+pp.get('/profile', requireAuth, async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const user = await db.User.findByPk(userId);
+
+        if (user) {
+            const userData = {
+                name: user.name,
+                email: user.email,
+                age: user.age,
+                location: user.location
+                // ...other user data you to display
+            };
+
+            // Render the profile page with user data
+            res.render('profile', { userData });
+        } else {
+            // Handle the case where the user is not found
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        console.error('Error fetching user data', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.post('/profile/update', requireAuth, async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const [updateCount] = await db.User.update(
+            { name, email, age, location },
+            { where: { id: userId } }
+        );
+
+        if (updateCount === 0) {
+            // No rows were updated, which means the user was not found
+            res.status(404).send('User not found');
+        } else {
+            // Successful update
+            res.send('Profile updated successfully');
+        }
+    } catch (error) {
+        console.error('Error while updating profile', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Login Routes
 app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -45,7 +109,7 @@ app.post('/login', async (req, res) => {
             console.log("No user found with email:", email);
             return res.status(401).send('Invalid credentials');
         }
-        
+
         // regen session after login
         req.session.regenerate(err => {
             if (err) {
@@ -63,7 +127,7 @@ app.post('/login', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
+// Logout route
 app.post('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -72,20 +136,17 @@ app.post('/logout', (req, res) => {
         res.send('Logged out successfully');
     });
 });
-
+// Middleware to check if user is logged in
 function requireAuth(req, res, next) {
     if (!req.session.userId) {
         return res.status(401).send('You must be logged in');
     }
     next();
 }
-
-
+// Protected route
 app.get('/protected-route', requireAuth, (req, res) => {
     res.send('You are viewing a protected route');
 });
-
-
 
 // Registration route
 app.post('/register', async (req, res) => {
