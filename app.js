@@ -5,13 +5,15 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt')
 const db = require('./models');
 const session = require('express-session');
-const exphbs  = require('express-handlebars');
+
+// Set up Handlebars.js engine with custom helpers
+const hbs = exphbs.create({ helpers });
 
 const app = express();
 const port = process.env.PORT || 3002;
 
-// Set up Handlebars
-app.engine('handlebars', exphbs());
+// Inform Express.js on which template engine to use
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
 // Set up the public directory
