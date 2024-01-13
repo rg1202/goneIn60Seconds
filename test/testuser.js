@@ -1,21 +1,24 @@
-// testModels.js
+// testuser.js
 require('dotenv').config();
+const bcrypt = require('bcrypt');
+const db = require('../models'); // Adjust the path as necessary
 
-const db = require('../models'); // Adjusted path
+async function createTestUser() {
+    try {
+        const hashedPassword = await bcrypt.hash('password123', 10); // Hashing the password
 
-// Code to create a new user
-db.User.create({
-    name: "Test User3",
-    location: "Saint Louis, Missouri",
-    age: 42,
-    email: "testuser3@example.com",
-    password: "password123" // Assuming this is hashed in the actual implementation
-})
-.then(newUser => {
-    console.log('New User Created:', newUser);
-})
-.catch(error => {
-    console.error('Error creating a new user:', error);
-});
+        const newUser = await db.User.create({
+            name: "Test User4",
+            location: "Saint Louis, Missouri",
+            age: 50,
+            email: "testuser4@example.com",
+            password: hashedPassword
+        });
 
-// Run this file with Node.js
+        console.log('New User Created:', newUser.get({ plain: true }));
+    } catch (error) {
+        console.error('Error creating a new user:', error);
+    }
+}
+
+createTestUser();
