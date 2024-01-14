@@ -162,10 +162,11 @@ app.post('/logout', (req, res) => {
 });
 // Middleware to check if user is logged in
 function requireAuth(req, res, next) {
-    if (!req.session.userId) {
-        return res.status(401).send('You must be logged in');
+    if (req.session && req.session.userId) {
+        return next();
+    } else {
+        res.redirect('/login'); // Or another appropriate response
     }
-    next();
 }
 // Protected route
 app.get('/protected-route', requireAuth, (req, res) => {
@@ -200,34 +201,54 @@ app.post('/register', async (req, res) => {
     }
 });
 
+const roomsUsersMap = new Map();
+
 io.on('connection', (socket) => {
     socket.on('join', ({ room, name }) => {
-        if (room && name) {
-            socket.join(room);
-            console.log(`${name} joined ${room}`);
-            // Notify other users in the room
-            socket.to(room).emit('message', `${name} has joined the room`);
-        } else {
-            console.error('Room or name is undefined in join event');
+        socket.join(room);
+
+        // Add user to room in roomsUsersMap
+        if (!roomsUsersMap.has(room)) {
+            roomsUsersMap.set(room, new Set());
         }
-    });
-    // When a user sends a message
-    socket.on('message', ({ room, name, message }) => {
-        // Send message to everyone in the room, including sender's name
-        io.to(room).emit('message', { name, message });
+        roomsUsersMap.get(room).add(name);
+
+        // Emit message to the user if they are the only one in the room
+        if (roomsUsersMap.get(room).size === 1) {
+            socket.emit('message', { name: 'System', message: 'You are the only one in this room' });
+        } else {
+            // Emit list of users in the room to the user
+            socket.emit('roomUsers', [...roomsUsersMap.get(room)]);
+        }
+        
+        // Notify other users
+        socket.to(room).emit('message', { name: 'System', message: `${name} has joined the room`});
+   
+        socket.on('message', ({ room, name, message }) => {
+            if (room && name && message) {
+                io.to(room).emit('message', { name, message });
+            }
+        });
+    
     });
 
-    // When a user leaves a room
     socket.on('leave', ({ room, name }) => {
-        console.log(`${name} left ${room}`);
         socket.leave(room);
-        // Notify other users in the room
-        socket.to(room).emit('message', `${name} has left the room`);
+        // Remove user from room in roomsUsersMap
+        if (roomsUsersMap.has(room)) {
+            roomsUsersMap.get(room).delete(name);
+            if (roomsUsersMap.get(room).size === 0) {
+                roomsUsersMap.delete(room);
+            }
+        }
+        // Notify other users
+        socket.to(room).emit('message', { name: 'System', message: `${name} has left the room` });
     });
 
-    // When a user starts typing (Optional)
     socket.on('typing', ({ room, name }) => {
-        socket.to(room).broadcast.emit('typing', `${name} is typing...`);
+        if (room && name) {
+            socket.to(room).emit('typing', `${name} is typing...`);
+        }
     });
 
     // Handling private messages (Optional)

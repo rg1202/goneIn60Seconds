@@ -27,46 +27,86 @@
     <div id="chatBox">
         <!-- Messages will be displayed here -->
     </div>
-    <input type="text" id="messageInput" placeholder="Type a message...">
+    <div id="typingIndicator"></div>
+    <input type="text" id="messageInput" placeholder="Type a message..." oninput="emitTyping()">
     <button onclick="sendMessage()">Send</button>
+    <button onclick="leaveRoom()">Leave Room</button>
 
     <!-- Socket.IO Client -->
     <script src="/socket.io/socket.io.js"></script>
-<script>
-    console.log(io); // Should log the io function if loaded correctly
-    var socket = io();
-    socket.on('connect', () => {
-    console.log('Connected to the server');
-    });
+    <div id="username" style="display: none;">{{ name }}</div>
+    <script>
+        console.log(io); // Should log the io function if loaded correctly
+        var socket = io();
+        socket.on('connect', () => {
+            console.log('Connected to the server');
+        });
 
-    var currentRoom = '';
-    var name = 'User';  
+        var currentRoom = '';
+        var name = document.getElementById('username').innerText;
 
-    function joinRoom() {
-        currentRoom = document.getElementById('roomSelect').value;
-        if (currentRoom && name) {
-            socket.emit('join', { room: currentRoom, name: name });
-            console.log(`Attempting to join room: ${currentRoom} as ${name}`);
-        } else {
-            console.error('Room or name is undefined');
+        function joinRoom() {
+            currentRoom = document.getElementById('roomSelect').value;
+            if (currentRoom && name) {
+                socket.emit('join', { room: currentRoom, name: name });
+                console.log(`Attempting to join room: ${currentRoom} as ${name}`);
+                var chatBox = document.getElementById('chatBox');
+                chatBox.innerHTML += `<p>You joined ${currentRoom}</p>`;
+            } else {
+                console.error('Room or name is undefined');
+            }
         }
-    }
+
+        socket.on('roomUsers', (users) => {
+            var chatBox = document.getElementById('chatBox');
+            if (!users.length || (users.length === 1 && users[0] === name)) {
+                chatBox.innerHTML += '<p>You are the only one in this room</p>';
+            } else {
+                var usersList = '<p>Users in this room:</p><ul>';
+                users.forEach((user) => {
+                    usersList += `<li>${user}</li>`;
+                });
+                usersList += '</ul>';
+                chatBox.innerHTML += usersList;
+            }
+        });
+
+    function leaveRoom() {
+            if (currentRoom && name) {
+                socket.emit('leave', { room: currentRoom, name: name });
+                console.log(`Left room: ${currentRoom}`);
+                var chatBox = document.getElementById('chatBox');
+                chatBox.innerHTML += `<p>You left ${currentRoom}</p>`;
+                currentRoom = ''; // Reset currentRoom variable
+            }
+        }
+
+        function emitTyping() {
+            if (currentRoom) {
+                socket.emit('typing', { room: currentRoom, name: name });
+            }
+        }
 
     function sendMessage() {
-    var messageInput = document.getElementById('messageInput');
-    var message = messageInput.value;
-    socket.emit('message', { room: currentRoom, name: name, message: message });
+        var messageInput = document.getElementById('messageInput');
+        var message = messageInput.value;
+        socket.emit('message', { room: currentRoom, name: name, message: message });
+        messageInput.value = '';
+    }
 
-    messageInput.value = '';
-}
+    socket.on('typing', function(data) {
+        var typingIndicator = document.getElementById('typingIndicator');
+        typingIndicator.innerText = data;
+        setTimeout(() => {
+            typingIndicator.innerText = '';
+        }, 3000);
+    });
 
     socket.on('message', function(data) {
-    var chatBox = document.getElementById('chatBox');
-
-    // Check if the message is from the current user or others
-    var senderName = data.name === name ? 'Me' : data.name;
-    chatBox.innerHTML += '<p><strong>' + senderName + ':</strong> ' + data.message + '</p>';
-});
+        var chatBox = document.getElementById('chatBox');
+        var senderName = data.name === name ? 'Me' : data.name;
+        chatBox.innerHTML += `<p><strong>${senderName}:</strong> ${data.message}</p>`;
+    });
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
