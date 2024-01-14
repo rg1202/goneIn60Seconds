@@ -1,9 +1,31 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Web Dev Chat Rooms</title>
     <!-- Add any head elements like CSS files -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+        /* Chat message styling */
+        .message {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+
+        .message.sent {
+            background-color: #e0f7fa;
+            /* Light blue for sent messages */
+            text-align: right;
+        }
+
+        .message.received {
+            background-color: #e0e0e0;
+            /* Light gray for received messages */
+        }
+    </style>
 </head>
+
 <body>
     <h1>Welcome to Web Development Chat</h1>
 
@@ -21,16 +43,14 @@
         </select>
         <label>Room Selection</label>
     </div>
-    <button onclick="joinRoom()">Join Room</button>
+    <button class="btn waves-effect waves-light" onclick="joinRoom()">Join Room</button>
 
     <!-- Chat Messages and Input -->
-    <div id="chatBox">
-        <!-- Messages will be displayed here -->
-    </div>
+    <div id="chatBox"></div>
     <div id="typingIndicator"></div>
     <input type="text" id="messageInput" placeholder="Type a message..." oninput="emitTyping()">
-    <button onclick="sendMessage()">Send</button>
-    <button onclick="leaveRoom()">Leave Room</button>
+    <button class="btn waves-effect waves-light blue" onclick="sendMessage()">Send</button>
+    <button class="btn waves-effect waves-light red" onclick="leaveRoom()">Leave Room</button>
 
     <!-- Socket.IO Client -->
     <script src="/socket.io/socket.io.js"></script>
@@ -71,7 +91,7 @@
             }
         });
 
-    function leaveRoom() {
+        function leaveRoom() {
             if (currentRoom && name) {
                 socket.emit('leave', { room: currentRoom, name: name });
                 console.log(`Left room: ${currentRoom}`);
@@ -87,33 +107,34 @@
             }
         }
 
-    function sendMessage() {
-        var messageInput = document.getElementById('messageInput');
-        var message = messageInput.value;
-        socket.emit('message', { room: currentRoom, name: name, message: message });
-        messageInput.value = '';
-    }
+        function sendMessage() {
+            var messageInput = document.getElementById('messageInput');
+            var message = messageInput.value;
+            socket.emit('message', { room: currentRoom, name: name, message: message });
+            messageInput.value = '';
+        }
 
-    socket.on('typing', function(data) {
-        var typingIndicator = document.getElementById('typingIndicator');
-        typingIndicator.innerText = data;
-        setTimeout(() => {
-            typingIndicator.innerText = '';
-        }, 3000);
-    });
+        socket.on('typing', function (data) {
+            var typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.innerText = data;
+            setTimeout(() => {
+                typingIndicator.innerText = '';
+            }, 3000);
+        });
 
-    socket.on('message', function(data) {
-        var chatBox = document.getElementById('chatBox');
-        var senderName = data.name === name ? 'Me' : data.name;
-        chatBox.innerHTML += `<p><strong>${senderName}:</strong> ${data.message}</p>`;
-    });
-</script>
+        socket.on('message', function (data) {
+            var chatBox = document.getElementById('chatBox');
+            var messageClass = data.name === name ? 'message sent' : 'message received';
+            chatBox.innerHTML += `<div class="${messageClass}"><strong>${data.name}:</strong> ${data.message}</div>`;
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var elems = document.querySelectorAll('select');
             var instances = M.FormSelect.init(elems);
         });
     </script>
 </body>
+
 </html>

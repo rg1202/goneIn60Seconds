@@ -1,35 +1,71 @@
-<h4>...logged in...</h4>
-<h1>{{name}}'s Profile</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{name}}'s Profile</title>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+    <div class="container">
+        <h4>...logged in...</h4>
+        <h1>{{name}}'s Profile</h1>
 
-<!-- Displaying current user information -->
-<div>
-    <h2>Current Information</h2>
-    <p><strong>Name:</strong> {{name}}</p>
-    <p><strong>Email:</strong> {{email}}</p>
-    <p><strong>Location:</strong> {{location}}</p>
-    <p><strong>Age:</strong> {{age}}</p>
-</div>
+        <!-- Displaying current user information -->
+        <div>
+            <h2>Current Information</h2>
+            <p><strong>Name:</strong> {{name}}</p>
+            <p><strong>Email:</strong> {{email}}</p>
+            <p><strong>Location:</strong> {{location}}</p>
+            <p><strong>Age:</strong> {{age}}</p>
+        </div>
 
+        <!-- Link to Chat Page -->
+        <a href="/chat" class="btn waves-effect waves-light">Go to Web Dev Chat Rooms!</a>
 
-<!-- Link to Chat Page -->
-<a href="/chat">Go to Web Dev Chat Rooms!</a>
+        <!-- Trigger Modal Button -->
+        <a class="waves-effect waves-light btn modal-trigger" href="#updateModal">Update Profile</a>
 
-<!-- Other profile content -->
+        <!-- Modal Structure -->
+        <div id="updateModal" class="modal">
+            <div class="modal-content">
+                <h4>Update Information</h4>
+                <form action="/profile/update" method="post">
+                    <div class="input-field">
+                        <input type="text" id="name" name="name" value="{{name}}">
+                        <label for="name">Name</label>
+                    </div>
 
-<!-- Form for updating user information -->
-<h2>Update Information</h2>
-<form action="/profile/update" method="post">
-    <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name" value="{{name}}"><br>
+                    <div class="input-field">
+                        <input type="email" id="email" name="email" value="{{email}}">
+                        <label for="email">Email</label>
+                    </div>
 
-    <label for="email">Email:</label><br>
-    <input type="text" id="email" name="email" value="{{email}}"><br>
+                    <div class="input-field">
+                        <input type="text" id="location" name="location" value="{{location}}">
+                        <label for="location">Location</label>
+                    </div>
 
-    <label for="location">Location:</label><br>
-    <input type="text" id="location" name="location" value="{{location}}"><br>
+                    <div class="input-field">
+                        <input type="number" id="age" name="age" value="{{age}}">
+                        <label for="age">Age</label>
+                    </div>
 
-    <label for="age">Age:</label><br>
-    <input type="number" id="age" name="age" value="{{age}}"><br>
+                    <button type="submit" class="btn waves-effect waves-light">Update Profile</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+    </div>
 
-    <button type="submit">Update Profile</button>
-</form>
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.modal');
+            var instances = M.Modal.init(elems);
+        });
+    </script>
+</body>
+</html>
