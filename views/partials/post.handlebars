@@ -1,7 +1,11 @@
-<div class="post">
+<div class="post" id="postNum{{this.id}}">
     <h2 class="postTitle">{{this.post_title}}</h2>
     <p class="postBody">{{this.post_body}}</p>
     <p class="postAuthor">{{user.name}}</p>
+    <form class="postComment-form" id="parentPost{{this.id}}">
+        <textarea class="newCommentBody" placeholder="Penny for your thoughts?"></textarea>
+        <button class="btn btn-primary" type="submit">Comment</button>
+    </form>
     <div class="postComments">
         {{#each comments}}
             <p class="comment">{{this.comment_body}}</p>
