@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt')
 const db = require('./models');
 const session = require('express-session');
+const exphbs = require('express-handlebars');
 const helpers = require('./utils/helpers');
+//const routes = require('./controllers');
 
 // Set up Handlebars.js engine with custom helpers
 const hbs = exphbs.create({ helpers });
@@ -37,12 +39,12 @@ app.use(session({
 }));
 
 // landing page
-app.get('/', (req, res) => {
-    res.render('index');
+app.get('/landing', (req, res) => {
+    res.render('landing');
 });
 
 // profile page
-pp.get('/profile', requireAuth, async (req, res) => {
+app.get('/profile', requireAuth, async (req, res) => {
     try {
         const userId = req.session.userId;
         const user = await db.User.findByPk(userId);
@@ -57,7 +59,7 @@ pp.get('/profile', requireAuth, async (req, res) => {
             };
 
             // Render the profile page with user data
-            res.render('profile', { userData });
+            res.render('profile', user.dataValues);
         } else {
             // Handle the case where the user is not found
             res.status(404).send('User not found');
@@ -71,16 +73,16 @@ pp.get('/profile', requireAuth, async (req, res) => {
 app.post('/profile/update', requireAuth, async (req, res) => {
     try {
         const userId = req.session.userId;
+        const { name, email, age, location } = req.body; // Extracting data from the form
+
         const [updateCount] = await db.User.update(
             { name, email, age, location },
             { where: { id: userId } }
         );
 
         if (updateCount === 0) {
-            // No rows were updated, which means the user was not found
             res.status(404).send('User not found');
         } else {
-            // Successful update
             res.send('Profile updated successfully');
         }
     } catch (error) {
