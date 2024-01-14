@@ -83,7 +83,8 @@ app.post('/profile/update', requireAuth, async (req, res) => {
         if (updateCount === 0) {
             res.status(404).send('User not found');
         } else {
-            res.send('Profile updated successfully');
+            res.render('update-success');
+            //res.send('Profile updated successfully');
         }
     } catch (error) {
         console.error('Error while updating profile', error);
