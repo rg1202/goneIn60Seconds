@@ -1,6 +1,8 @@
 require('dotenv').config();  // Import and configure dotenv at the top
 
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt')
 const db = require('./models');
@@ -9,10 +11,14 @@ const exphbs = require('express-handlebars');
 const helpers = require('./utils/helpers');
 //const routes = require('./controllers');
 
+
 // Set up Handlebars.js engine with custom helpers
 const hbs = exphbs.create({ helpers });
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
+
 const port = process.env.PORT || 3002;
 
 // Inform Express.js on which template engine to use
@@ -91,6 +97,17 @@ app.post('/profile/update', requireAuth, async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+app.get('/chat', requireAuth, async (req, res) => {
+    const userId = req.session.userId;
+    const user = await db.User.findByPk(userId);
+    if (user) {
+        res.render('chat', { name: user.name });
+    } else {
+        res.status(404).send('User not found');
+    }
+});
+
 
 // Login Routes
 app.post('/login', async (req, res) => {
@@ -182,8 +199,58 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ message: 'Error while registering user' });
     }
 });
+
+io.on('connection', (socket) => {
+    console.log('New WebSocket connection');
+
+    // When a user joins a room
+    socket.on('join', ({ room, name }) => {
+        console.log(`${name} is trying to join ${room}`);
+        socket.join(room);
+        socket.to(room).emit('message', `${name} has joined the room`);
+    });
+
+    // When a user sends a message to a room
+    socket.on('message', ({ room, name, message }) => {
+        console.log(`Message in ${room} by ${name}: ${message}`);
+        // Broadcast the message to other users in the same room
+        socket.to(room).emit('message', message);
+    });
+
+    // When a user leaves a room
+    socket.on('leave', ({ room, name }) => {
+        console.log(`${name} left ${room}`);
+        socket.leave(room);
+        // Notify other users in the room
+        socket.to(room).emit('message', `${name} has left the room`);
+    });
+
+    // When a user starts typing (Optional)
+    socket.on('typing', ({ room, name }) => {
+        socket.to(room).broadcast.emit('typing', `${name} is typing...`);
+    });
+
+    // Handling private messages (Optional)
+    socket.on('privateMessage', ({ target, message }) => {
+        socket.to(target).emit('privateMessage', message);
+    });
+
+    // Handling acknowledged events (Optional)
+    socket.on('acknowledgedEvent', (data, callback) => {
+        console.log(`Acknowledged event data: ${data}`);
+        callback('Received');
+    });
+
+    // When a user disconnects
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+        // Handle user disconnection if needed, like notifying the room, etc.
+    });
+});
+
+
 // sequelize     
 db.sequelize.sync().then(() => {
-    // Start server here
-    app.listen(port, () => console.log(`Server running on port ${port}`));
+    // Start server here with 'server.listen', not 'app.listen'
+    server.listen(port, () => console.log(`Server running on port ${port}`));
 });

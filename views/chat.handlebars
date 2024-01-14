@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Dev Chat Rooms</title>
+    <!-- Add any head elements like CSS files -->
+</head>
+<body>
+    <h1>Welcome to Web Development Chat</h1>
+
+    <!-- Room Selection -->
+    <select id="roomSelect">
+        <option value="htmlCSS">HTML & CSS</option>
+        <option value="javascript">JavaScript</option>
+        <option value="reactJS">ReactJS</option>
+        <option value="nodeJS">NodeJS</option>
+        <option value="pythonFlask">Python & Flask</option>
+    </select>
+    <button onclick="joinRoom()">Join Room</button>
+
+    <!-- Chat Messages and Input -->
+    <div id="chatBox">
+        <!-- Messages will be displayed here -->
+    </div>
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <!-- Socket.IO Client -->
+    <script src="/socket.io/socket.io.js"></script>
+<script>
+    console.log(io); // Should log the io function if loaded correctly
+    var socket = io();
+    socket.on('connect', () => {
+    console.log('Connected to the server');
+    });
+    var currentRoom = '';
+    var name = '{{name}}'; // The name is now obtained from the server
+
+    function joinRoom() {
+    currentRoom = document.getElementById('roomSelect').value;
+    socket.emit('join', { room: currentRoom, name: name });
+    console.log(`Attempting to join room: ${currentRoom}`);
+    document.getElementById('chatBox').innerHTML = `Joined ${currentRoom}`;
+}
+
+    function sendMessage() {
+    var message = document.getElementById('messageInput').value;
+    socket.emit('message', { room: currentRoom, name: name, message: message });
+    console.log(`Sending message to ${currentRoom}: ${message}`);
+    document.getElementById('messageInput').value = '';
+}
+
+    socket.on('message', function(message) {
+    var chatBox = document.getElementById('chatBox');
+    chatBox.innerHTML += `<p>${message}</p>`;
+});
+</script>
+
+</body>
+</html>
