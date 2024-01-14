@@ -124,7 +124,8 @@ app.post('/login', async (req, res) => {
 
                 // Set user info in session
                 req.session.userId = user.id;
-                res.send('Logged in successfully');
+               // Redirect to the profile page
+            res.redirect('/profile');
             });
         
     } catch (error) {
