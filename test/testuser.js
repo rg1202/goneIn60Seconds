@@ -8,10 +8,10 @@ async function createTestUser() {
         const hashedPassword = await bcrypt.hash('password123', 10); // Hashing the password
 
         const newUser = await db.User.create({
-            name: "Test User4",
-            location: "Saint Louis, Missouri",
-            age: 50,
-            email: "testuser4@example.com",
+            name: "Test User5",
+            location: "Oakland, California",
+            age: 34,
+            email: "testuser5@example.com",
             password: hashedPassword
         });
 

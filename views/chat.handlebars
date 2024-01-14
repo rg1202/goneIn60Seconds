@@ -43,15 +43,19 @@
 }
 
     function sendMessage() {
-    var message = document.getElementById('messageInput').value;
+    var messageInput = document.getElementById('messageInput');
+    var message = messageInput.value;
     socket.emit('message', { room: currentRoom, name: name, message: message });
-    console.log(`Sending message to ${currentRoom}: ${message}`);
-    document.getElementById('messageInput').value = '';
+
+    messageInput.value = '';
 }
 
-    socket.on('message', function(message) {
+    socket.on('message', function(data) {
     var chatBox = document.getElementById('chatBox');
-    chatBox.innerHTML += `<p>${message}</p>`;
+
+    // Check if the message is from the current user or others
+    var senderName = data.name === name ? 'Me' : data.name;
+    chatBox.innerHTML += '<p><strong>' + senderName + ':</strong> ' + data.message + '</p>';
 });
 </script>
 

@@ -210,11 +210,10 @@ io.on('connection', (socket) => {
         socket.to(room).emit('message', `${name} has joined the room`);
     });
 
-    // When a user sends a message to a room
+    // When a user sends a message
     socket.on('message', ({ room, name, message }) => {
-        console.log(`Message in ${room} by ${name}: ${message}`);
-        // Broadcast the message to other users in the same room
-        socket.to(room).emit('message', message);
+        // Send message to everyone in the room, including sender's name
+        io.to(room).emit('message', { name, message });
     });
 
     // When a user leaves a room
