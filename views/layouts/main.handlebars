@@ -3,10 +3,39 @@
 <html>
 <head>
     <title>{{title}}</title>
-    <!-- other head elements -->
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Responsive viewport tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        .nav-wrapper {
+            background-color: #2c3e50; /* Customize navbar color */
+        }
+    </style>
 </head>
 <body>
-    {{{body}}}
-    <!-- common footer, scripts, etc. -->
+
+    <nav>
+        <div class="nav-wrapper">
+            <a href="/" class="brand-logo center">ChatSideApp</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {{{body}}}
+    </div>
+
+    <!-- Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

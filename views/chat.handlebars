@@ -8,13 +8,19 @@
     <h1>Welcome to Web Development Chat</h1>
 
     <!-- Room Selection -->
-    <select id="roomSelect">
-        <option value="htmlCSS">HTML & CSS</option>
-        <option value="javascript">JavaScript</option>
-        <option value="reactJS">ReactJS</option>
-        <option value="nodeJS">NodeJS</option>
-        <option value="pythonFlask">Python & Flask</option>
-    </select>
+    <!-- Ensure Materialize classes are used -->
+    <div class="input-field">
+        <select id="roomSelect">
+            <option value="" disabled selected>Choose your room</option>
+            <option value="htmlCSS">HTML & CSS</option>
+            <option value="javascript">JavaScript</option>
+            <option value="node">Node.js & Express</option>
+            <option value="mongo">MongoDB</option>
+            <option value="react">React</option>
+            <!-- ... other options ... -->
+        </select>
+        <label>Room Selection</label>
+    </div>
     <button onclick="joinRoom()">Join Room</button>
 
     <!-- Chat Messages and Input -->
@@ -32,15 +38,19 @@
     socket.on('connect', () => {
     console.log('Connected to the server');
     });
+
     var currentRoom = '';
-    var name = '{{name}}'; // The name is now obtained from the server
+    var name = 'User';  
 
     function joinRoom() {
-    currentRoom = document.getElementById('roomSelect').value;
-    socket.emit('join', { room: currentRoom, name: name });
-    console.log(`Attempting to join room: ${currentRoom}`);
-    document.getElementById('chatBox').innerHTML = `Joined ${currentRoom}`;
-}
+        currentRoom = document.getElementById('roomSelect').value;
+        if (currentRoom && name) {
+            socket.emit('join', { room: currentRoom, name: name });
+            console.log(`Attempting to join room: ${currentRoom} as ${name}`);
+        } else {
+            console.error('Room or name is undefined');
+        }
+    }
 
     function sendMessage() {
     var messageInput = document.getElementById('messageInput');
@@ -58,6 +68,12 @@
     chatBox.innerHTML += '<p><strong>' + senderName + ':</strong> ' + data.message + '</p>';
 });
 </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems);
+        });
+    </script>
 </body>
 </html>

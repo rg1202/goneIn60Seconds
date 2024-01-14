@@ -102,7 +102,7 @@ app.get('/chat', requireAuth, async (req, res) => {
     const userId = req.session.userId;
     const user = await db.User.findByPk(userId);
     if (user) {
-        res.render('chat', { name: user.name });
+        res.render('chat', { name: user.name }); // Ensure user.name is not undefined
     } else {
         res.status(404).send('User not found');
     }
@@ -201,15 +201,16 @@ app.post('/register', async (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('New WebSocket connection');
-
-    // When a user joins a room
     socket.on('join', ({ room, name }) => {
-        console.log(`${name} is trying to join ${room}`);
-        socket.join(room);
-        socket.to(room).emit('message', `${name} has joined the room`);
+        if (room && name) {
+            socket.join(room);
+            console.log(`${name} joined ${room}`);
+            // Notify other users in the room
+            socket.to(room).emit('message', `${name} has joined the room`);
+        } else {
+            console.error('Room or name is undefined in join event');
+        }
     });
-
     // When a user sends a message
     socket.on('message', ({ room, name, message }) => {
         // Send message to everyone in the room, including sender's name
