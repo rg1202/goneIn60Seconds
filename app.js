@@ -78,25 +78,25 @@ app.get("/profile", requireAuth, async (req, res) => {
 });
 
 app.post("/profile/update", requireAuth, async (req, res) => {
-	try {
-		const userId = req.session.userId;
-		const { name, email, age, location } = req.body; // Extracting data from the form
+    try {
+        const userId = req.session.userId;
+        const { name, email, age, location } = req.body;
 
-		const [updateCount] = await db.User.update(
-			{ name, email, age, location },
-			{ where: { id: userId } }
-		);
+        const [updateCount] = await db.User.update(
+            { name, email, age, location },
+            { where: { id: userId } }
+        );
 
-		if (updateCount === 0) {
-			res.status(404).send("User not found");
-		} else {
-			res.render("update-success");
-			//res.send('Profile updated successfully');
-		}
-	} catch (error) {
-		console.error("Error while updating profile", error);
-		res.status(500).send("Internal Server Error");
-	}
+        if (updateCount === 0) {
+            res.status(404).json({ success: false, message: "User not found" });
+        } else {
+            // Respond with JSON data
+            res.json({ success: true, name, email, location, age });
+        }
+    } catch (error) {
+        console.error("Error while updating profile", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
 });
 
 app.get("/chat", requireAuth, async (req, res) => {

@@ -8,15 +8,15 @@
 <body>
     <div class="container">
         <h4>...logged in...</h4>
-        <h1>{{name}}'s Profile</h1>
+        <h1 id="profileName">{{name}}'s Profile</h1>
 
         <!-- Displaying current user information -->
         <div>
             <h2>Current Information</h2>
-            <p><strong>Name:</strong> {{name}}</p>
-            <p><strong>Email:</strong> {{email}}</p>
-            <p><strong>Location:</strong> {{location}}</p>
-            <p><strong>Age:</strong> {{age}}</p>
+            <p name="name"><strong>Name:</strong> {{name}}</p>
+            <p name="email"><strong>Email:</strong> {{email}}</p>
+            <p name="location"><strong>Location:</strong> {{location}}</p>
+            <p name="age"><strong>Age:</strong> {{age}}</p>
         </div>
 
         <!-- Link to Chat Page -->
@@ -29,7 +29,7 @@
         <div id="updateModal" class="modal">
             <div class="modal-content">
                 <h4>Update Information</h4>
-                <form action="/profile/update" method="post">
+                <form id="updateForm" action="/profile/update" method="post">
                     <div class="input-field">
                         <input type="text" id="name" name="name" value="{{name}}">
                         <label for="name">Name</label>
@@ -61,11 +61,55 @@
 
     <!-- Materialize JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.modal');
-            var instances = M.Modal.init(elems);
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Materialize components
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems);
+
+    // Handle form submission
+    document.querySelector('#updateForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var formData = {
+            name: document.querySelector('#name').value,
+            email: document.querySelector('#email').value,
+            location: document.querySelector('#location').value,
+            age: document.querySelector('#age').value
+        };
+
+        fetch('/profile/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                // Update profile information on the page
+                document.querySelector("p[name='name']").innerText = `Name: ${data.name}`;
+                document.querySelector("p[name='email']").innerText = `Email: ${data.email}`;
+                document.querySelector("p[name='location']").innerText = `Location: ${data.location}`;
+                document.querySelector("p[name='age']").innerText = `Age: ${data.age}`;
+
+                // Close the modal
+                var instance = M.Modal.getInstance(document.querySelector('#updateModal'));
+                instance.close();
+
+                // Show a success message
+                M.toast({html: 'Profile updated successfully'});
+            } else {
+                // Handle error
+                M.toast({html: data.message});
+            }
+        })
+        .catch((error) => {
+            M.toast({html: 'An error occurred while updating the profile'});
         });
-    </script>
+    });
+});
+</script>
 </body>
 </html>
