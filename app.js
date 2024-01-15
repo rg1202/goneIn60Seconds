@@ -20,6 +20,7 @@ app.use(otherMiddleware.sessionMiddleware); // Use session middleware
 // Use routes
 app.use(routes); // Use routes
 
+
 // Socket.io chat controller
 const chatController = require('./controllers/chatController'); // Import chat controller
 io.on("connection", (socket) => { // Listen for socket.io connections
