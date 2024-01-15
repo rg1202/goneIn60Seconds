@@ -15,6 +15,7 @@ app.use(otherMiddleware.sessionMiddleware);  // Use session middleware
 app.use(otherMiddleware.bodyParserJson); // Use body parser middleware
 app.use(otherMiddleware.bodyParserUrlencoded); // Use body parser middleware
 app.use(express.static("public")); // Serve static content for the app from the "public" directory in the application directory
+app.use(otherMiddleware.sessionMiddleware); // Use session middleware
 
 // Use routes
 app.use(routes); // Use routes
