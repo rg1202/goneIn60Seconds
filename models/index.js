@@ -18,7 +18,7 @@ db.sequelize = sequelize;
 
 // Import models and associate them with the Sequelize instance
 db.User = require('./user')(sequelize, Sequelize);
-db.Message = require('./message')(sequelize, Sequelize); // Assuming you have a 'message.js'
+db.Message = require('./message')(sequelize, Sequelize); // 
 
 // Set up associations
 db.User.hasMany(db.Message, { foreignKey: 'senderId', as: 'SentMessages' });
