@@ -1,3 +1,5 @@
+const { getDefaultHighWaterMark } = require("stream");
+
 // models/user.js
 module.exports = (sequelize, DataTypes) => {
 const User = sequelize.define('User', {
