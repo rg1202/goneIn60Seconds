@@ -1,28 +1,38 @@
 // registerController.js
+
+const db = require('../models'); // Adjust path as needed
 const bcrypt = require('bcrypt');
-const db = require('../models'); // Adjust the path as needed
 
-const handleRegistration = async (req, res) => {
+const registerUser = async (req, res) => {
     try {
-        const { name, age, location, email, password } = req.body;
+        const { name, email, location, age, password } = req.body;
 
+        // Check if user already exists
+        const existingUser = await db.User.findOne({ where: { email: email } });
+        if (existingUser) {
+            // Handle the case where user already exists
+            // For example, send back a message or redirect to a 'user exists' page
+            return res.status(409).send('User already exists with this email');
+        }
+
+        // Continue with registration if user does not exist
         const hashedPassword = await bcrypt.hash(password, 10);
-
-        await db.User.create({
+        const newUser = await db.User.create({
             name,
-            age,
-            location,
             email,
-            password: hashedPassword,
+            location,
+            age,
+            password: hashedPassword
         });
 
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (err) {
-        console.error('Error while registering user', err);
-        res.status(500).json({ message: 'Error while registering user' });
+        req.session.userId = newUser.id;
+        res.redirect('/profile');
+    } catch (error) {
+        console.error('Error during registration', error);
+        res.status(500).send('Internal Server Error');
     }
 };
 
 module.exports = {
-    handleRegistration
+    registerUser
 };

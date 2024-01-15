@@ -1,23 +1,141 @@
 <div class="row" style="margin-top: 5rem;">
     <div class="col s12 m6 offset-m3">
-        <div class="card">
+        <div class="card warhol-style">
             <div class="card-content">
-                <span class="card-title">ChatSideApp Login</span>
+                <span class="card-title warhol-title">ChatSideApp Login</span>
 
                 <form action="/login" method="post">
+                    <!-- Login form fields -->
                     <div class="input-field">
-                        <input id="email" type="email" name="email" class="validate" required>
-                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" class="validate warhol-input" required>
+                        <label for="email" class="warhol-label">Email</label>
                     </div>
                     <div class="input-field">
-                        <input id="password" type="password" name="password" class="validate" required>
-                        <label for="password">Password</label>
+                        <input id="password" type="password" name="password" class="validate warhol-input" required>
+                        <label for="password" class="warhol-label">Password</label>
                     </div>
                     <div class="card-action right-align">
-                        <button type="submit" class="btn waves-effect waves-light">Login</button>
+                        <button type="submit" class="btn waves-effect waves-light warhol-btn">Login</button>
                     </div>
                 </form>
+            </div>
+            <div class="card-action">
+                <div class="center-align">
+                    Don't have an account? 
+                </div>
+                <div class="center-container">
+                    <a class="waves-effect waves-light btn modal-trigger warhol-btn" href="#registerModal">Register here</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10vh;
+    }
+
+    .warhol-style {
+        background-color: #f0e68c; /* Light khaki background */
+        box-shadow: 5px 5px 10px #888888; /* Slight shadow for depth */
+    }
+
+    .warhol-title {
+        color: #ff4500; /* Orangered color for titles */
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+    }
+
+    .warhol-input {
+        border-bottom: 1px solid #ff4500; /* Orangered underline for inputs */
+    }
+
+    .warhol-label {
+        color: #2e8b57; /* SeaGreen color for labels */
+    }
+
+    .warhol-btn {
+        background-color: #ff4500; /* Orangered background for buttons */
+        margin-top: 10px;
+    }
+
+    .warhol-btn:hover {
+        background-color: #2e8b57; /* SeaGreen background on hover */
+    }
+</style>
+
+<!-- Modal Structure -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <h4>Register New User</h4>
+        <form action="/register" method="post">
+            <div class="input-field">
+                <input id="name" type="text" name="name" required>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <input id="email" type="email" name="email" required>
+                <label for="email">Email</label>
+            </div>
+            <div class="input-field">
+                <input id="location" type="text" name="location">
+                <label for="location">Location</label>
+            </div>
+            <div class="input-field">
+                <input id="age" type="number" name="age">
+                <label for="age">Age</label>
+            </div>
+            <div class="input-field">
+                <input id="password" type="password" name="password" required>
+                <label for="password">Password</label>
+            </div>
+            <button type="submit" class="btn waves-effect waves-light">Register</button>
+            <!-- Add a placeholder for error messages in your registration modal -->
+            <div id="registrationError" style="color: red;"></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems);
+    });
+
+    document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Check if the form is valid
+        if (!isValid(this)) {
+            // Optionally, display some error message to the user
+            document.getElementById('registrationError').textContent = 'Please fill out the form correctly.';
+            return;
+        }
+
+        const formData = new FormData(this);
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                document.getElementById('registrationError').textContent = errorText;
+            } else {
+                window.location.href = '/profile';
+            }
+        } catch (error) {
+            console.error('Registration failed', error);
+        }
+    });
+
+    function isValid(form) {
+        // Return true if the form is valid, false otherwise
+        return form.checkValidity();
+    }
+</script>

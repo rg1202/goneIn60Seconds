@@ -1,10 +1,8 @@
+// registerRoutes.js
 const express = require('express');
-const bcrypt = require('bcrypt');
-const db = require('../models'); // Adjust the path to your models directory as needed
 const router = express.Router();
-const registerController = require('../controllers/registerController');
+const { registerUser } = require('../controllers/registerController');
 
-// Registration route
-router.post('/register', registerController.handleRegistration);
+router.post('/register', registerUser);
 
 module.exports = router;

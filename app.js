@@ -1,44 +1,33 @@
-require("dotenv").config();
+require("dotenv").config(); // Load environment variables from .env file
 
-const express = require('express');
-const http = require("http");
-const socketIo = require("socket.io");
-const exphbs = require("express-handlebars");
-const helpers = require("./utils/helpers");
-const routes = require("./routes"); // Ensure this correctly imports all your routes
-const chatRoutes = require('./routes/chatRoutes');
-const authRoutes = require('./routes/authRoutes');
+const express = require('express'); // Import express
+const http = require("http"); // Import http
+const socketIo = require("socket.io"); // Import socket.io
+const routes = require("./routes"); // Import routes
+const otherMiddleware = require('./middleware/otherMiddleware');  // Import other middleware
+const app = express(); // Create express app
+const server = http.createServer(app); // Create server using express app
+const io = socketIo(server); // Create socket using server
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
-
-// Set up Handlebars.js engine with custom helpers
-const hbs = exphbs.create({ helpers });
-app.engine("handlebars", hbs.engine);
-app.set("view engine", "handlebars");
-
-// Apply other middleware
-const otherMiddleware = require('./middleware/otherMiddleware');
-app.use(otherMiddleware.sessionMiddleware);
-app.use(otherMiddleware.bodyParserJson);
-app.use(otherMiddleware.bodyParserUrlencoded);
-app.use(express.static("public"));
+// Apply middleware
+otherMiddleware.handlebars(app);  // Use handlebars middleware
+app.use(otherMiddleware.sessionMiddleware);  // Use session middleware
+app.use(otherMiddleware.bodyParserJson); // Use body parser middleware
+app.use(otherMiddleware.bodyParserUrlencoded); // Use body parser middleware
+app.use(express.static("public")); // Serve static content for the app from the "public" directory in the application directory
 
 // Use routes
-app.use(routes);
-app.use('/chat', chatRoutes);
-app.use('/auth', authRoutes);
+app.use(routes); // Use routes
 
 // Socket.io chat controller
-const chatController = require('./controllers/chatController');
-io.on("connection", (socket) => {
-    chatController.onConnection(socket, io);
+const chatController = require('./controllers/chatController'); // Import chat controller
+io.on("connection", (socket) => { // Listen for socket.io connections
+    chatController.onConnection(socket, io); // Call onConnection() in chat controller
 });
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3002;  // Set default port to 3002 or use environment port
 const db = require("./models"); // Import your database
 
 db.sequelize.sync().then(() => {
-    server.listen(port, () => console.log(`Server running on port ${port}`));
+    server.listen(port, () => console.log(`Server running on port ${port}`)); // Start server
 });

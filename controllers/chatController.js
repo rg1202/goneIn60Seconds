@@ -1,6 +1,6 @@
 // chatController.js
-const roomsUsersMap = new Map();
-const db = require("../models");
+const roomsUsersMap = new Map(); // Map of rooms to users
+const db = require("../models"); // Import database
 
 const onConnection = (socket, io) => {
 socket.on("join", ({ room, name }) => {
@@ -36,7 +36,7 @@ const addOrJoinRoom = (room, name) => {
 		roomsUsersMap.set(room, new Set());
 	}
 	roomsUsersMap.get(room).add(name);
-};
+}; 
 
 const emitRoomStatus = (room, name, socket) => {
 	if (roomsUsersMap.get(room).size === 1) {
