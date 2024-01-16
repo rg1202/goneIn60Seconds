@@ -9,6 +9,6 @@ router.get('/', homeController.renderLandingPage);
 router.post('/login', homeController.handleLogin);
 
 // Logout route
-router.post('/', homeController.handleLogout);
+router.post('/logout', homeController.handleLogout);
 
 module.exports = router;
