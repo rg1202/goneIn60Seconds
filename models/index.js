@@ -27,7 +27,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // Import models and associate them with the Sequelize instance
-db.User = require("./User")(sequelize, Sequelize);
+db.User = require("./user")(sequelize, Sequelize);
 db.Message = require("./message")(sequelize, Sequelize); //
 
 // Set up associations
