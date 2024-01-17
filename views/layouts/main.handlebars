@@ -5,20 +5,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Super Cool Blog Site!</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
   <div >
     <header>
-      <a href='/'><h1 id="title">BlogSite!</h1></a>
       <nav>
-        {{#if logged_in}}
-        <a href="/profile">profile</a> |
-        <button class="no-button" id="logout">logout</button>
-        {{else}}
-        <a href="/login">login</a>
-        {{/if}}
+        <div class="nav-wrapper">
+          <a href='/' class="brand-logo">BlogSite!</a>
+            {{#if logged_in}}
+            <ul class="right">
+              <li><a class="btn" href="/profile">profile</a></li>
+              <li><a id="logout">logout</a></li>
+            </ul>
+            {{else}}
+            <ul class="right">
+              <a class="btn" href="/login">login</a>
+            </ul>
+            {{/if}}
+        </div>
       </nav>
     </header>
 
@@ -36,5 +43,8 @@
   <script src="/js/logout.js"></script>
   {{/if}}
 </body>
+
+<script src="./js/makeComment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
 </html>

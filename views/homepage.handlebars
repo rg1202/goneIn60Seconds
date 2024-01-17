@@ -1,12 +1,17 @@
-{{#if logged_in}}
-    {{> postbox}}
-{{/if}}
+<div id="mainPageBody" class="row width">
 
-{{!-- TODO: Figure out way to render posts in reverse order so newest posts are at the top of the page. --}}
-<div class="postsContainer">
-    {{#each posts}}
-        {{> post}}
-    {{/each}}
+    <div class="postsContainer col m10">
+        {{#each posts}}
+            {{> post}}
+        {{/each}}
+    </div>
+
+    <div class="postBoxContainer col m2">
+        {{#if logged_in}}
+            {{> postbox}}
+        {{/if}}
+    </div>
+    
 </div>
 
 {{!-- TODO: Fix chat
