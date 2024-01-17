@@ -1,7 +1,7 @@
 // testuser.js
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-const db = require('../models'); // Adjust the path as necessary
+const db = require('../models'); 
 
 async function createTestUser() {
     try {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../models'); // Adjust the path to your models
+const db = require('../models'); 
 const requireAuth = require('../middleware/authMiddleware'); // Adjust path as needed
 
 // Chat route

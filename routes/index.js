@@ -10,7 +10,6 @@ const profileRoutes = require('./profileRoutes');
 const registerRoutes = require('./registerRoutes');
 
 // Use the imported routes
-//router.use('/api', apiRoutes);
 router.use('/', authRoutes);
 router.use('/', homeRoutes);
 router.use('/chat', chatRoutes);

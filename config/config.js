@@ -14,6 +14,5 @@ module.exports = {
     use_env_variable: 'JAWSDB_URL',
     dialect: 'mysql',
     // additional production-specific configurations
-    // you can omit port here because it's included in the JAWSDB_URL
   }
 };

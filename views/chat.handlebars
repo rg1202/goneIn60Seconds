@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Web Dev Chat Rooms</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -10,14 +9,12 @@
             height: 100%;
             margin: 0;
         }
-
         .container {
             display: flex;
             flex-direction: column;
             height: 100%;
             padding: 20px;
         }
-
         .welcome-message {
             text-align: center;
             margin: 20px 0;
@@ -27,7 +24,6 @@
             border-radius: 5px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-
         .welcome-message h1 {
             font-size: 24px;
             margin: 0;
@@ -37,31 +33,25 @@
         #chatBox {
             display: flex;
             flex-direction: column-reverse;
-            /* New messages appear at the bottom */
             flex-grow: 1;
             overflow-y: auto;
-            /* Allows scrolling */
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
             max-height: 500px;
-            /* Adjust this value as needed */
         }
-
         .message {
             padding: 10px;
             margin: 5px 0;
             border-radius: 5px;
             max-width: 80%;
         }
-
         .message.sent {
             background-color: #e0f7fa;
             align-self: flex-end;
         }
-
         .message.received {
             background-color: #e0e0e0;
             align-self: flex-start;
@@ -72,12 +62,10 @@
             justify-content: space-between;
             align-items: center;
         }
-
         #messageInput {
             flex-grow: 2;
             margin-right: 10px;
         }
-
         /* Typing Indicator styling */
         .typing-indicator {
             padding: 5px 10px;
@@ -193,7 +181,7 @@
         document.getElementById('messageInput').addEventListener('keydown', function (event) {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault(); // Prevent the default action to avoid line break
-                sendMessage(); // Call your existing sendMessage function
+                sendMessage(); // Call existing sendMessage function
             }
         });
 
@@ -226,5 +214,4 @@
         });
     </script>
 </body>
-
 </html>

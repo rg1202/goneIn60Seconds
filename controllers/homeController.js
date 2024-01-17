@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const db = require('../models'); // Adjust the path as needed to your models directory
+const db = require('../models'); 
 
 const homeController = {
     renderLandingPage: (req, res) => {

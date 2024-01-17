@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const db = require('../models'); // Adjust the path as necessary
+const db = require('../models'); 
 
 
 // Inserting a test message

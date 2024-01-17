@@ -24,7 +24,7 @@ io.on("connection", (socket) => { // Listen for socket.io connections
 });
 
 const port = process.env.PORT || 3002;  // Set default port to 3002 or use environment port
-const db = require("./models"); // Import your database
+const db = require("./models"); // Import database
 
 db.sequelize.sync().then(() => {
     server.listen(port, () => console.log(`Server running on port ${port}`)); // Start server
