@@ -3,55 +3,110 @@
 
 <head>
     <title>Web Dev Chat Rooms</title>
-    <!-- Add any head elements like CSS files -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
-        /* Chat message styling */
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+        }
+
+        #chatBox {
+            display: flex;
+            flex-direction: column-reverse;
+            /* New messages appear at the bottom */
+            flex-grow: 1;
+            overflow-y: auto;
+            /* Allows scrolling */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            max-height: 500px;
+            /* Adjust this value as needed */
+        }
+
         .message {
             padding: 10px;
-            margin: 5px;
+            margin: 5px 0;
             border-radius: 5px;
+            max-width: 80%;
         }
 
         .message.sent {
             background-color: #e0f7fa;
-            /* Light blue for sent messages */
-            text-align: right;
+            align-self: flex-end;
         }
 
         .message.received {
             background-color: #e0e0e0;
-            /* Light gray for received messages */
+            align-self: flex-start;
+        }
+
+        .chat-inputs {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #messageInput {
+            flex-grow: 2;
+            margin-right: 10px;
+        }
+
+        /* Typing Indicator styling */
+        .typing-indicator {
+            padding: 5px 10px;
+            margin: 0;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            font-style: italic;
+            color: #555;
+        }
+
+        #typingIndicatorContainer {
+            margin-bottom: 10px;
+            text-align: center;
+            /* Center the typing indicator */
         }
     </style>
 </head>
 
 <body>
-    <h1>Welcome to Web Development Chat, {{name}}!</h1>
+    <div class="container">
+        <h1>Welcome to Web Development Chat, {{name}}!</h1>
+        <div class="input-field">
+            <select id="roomSelect">
+                <option value="" disabled selected>Choose your room</option>
+                <option value="htmlCSS">HTML & CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="node">Node.js & Express</option>
+                <option value="mongo">MongoDB</option>
+                <option value="react">React</option>
+                <!-- ... other options ... -->
+            </select>
+            <label>Room Selection</label>
+        </div>
+        <button class="btn waves-effect waves-light" onclick="joinRoom()">Join Room</button>
 
-    <!-- Room Selection -->
-    <!-- Ensure Materialize classes are used -->
-    <div class="input-field">
-        <select id="roomSelect">
-            <option value="" disabled selected>Choose your room</option>
-            <option value="htmlCSS">HTML & CSS</option>
-            <option value="javascript">JavaScript</option>
-            <option value="node">Node.js & Express</option>
-            <option value="mongo">MongoDB</option>
-            <option value="react">React</option>
-            <!-- ... other options ... -->
-        </select>
-        <label>Room Selection</label>
+        <div id="chatBox"></div>
+        <div id="typingIndicatorContainer" style="display: none;">
+            <div id="typingIndicator" class="typing-indicator"></div>
+        </div>
+        <div class="chat-inputs">
+            <input type="text" id="messageInput" placeholder="Type a message..." oninput="emitTyping()">
+            <button class="btn waves-effect waves-light blue" onclick="sendMessage()">Send</button>
+            <button class="btn waves-effect waves-light red" onclick="leaveRoom()">Leave</button>
+        </div>
     </div>
-    <button class="btn waves-effect waves-light" onclick="joinRoom()">Join Room</button>
-
-    <!-- Chat Messages and Input -->
-    <div id="chatBox"></div>
-    <div id="typingIndicator"></div>
-    <input type="text" id="messageInput" placeholder="Type a message..." oninput="emitTyping()">
-    <button class="btn waves-effect waves-light blue" onclick="sendMessage()">Send</button>
-    <button class="btn waves-effect waves-light red" onclick="leaveRoom()">Leave Room</button>
-
     <!-- Socket.IO Client -->
     <script src="/socket.io/socket.io.js"></script>
     <div id="username" style="display: none;">{{ name }}</div>
@@ -109,23 +164,40 @@
 
         function sendMessage() {
             var messageInput = document.getElementById('messageInput');
-            var message = messageInput.value;
-            socket.emit('message', { room: currentRoom, name: name, message: message });
-            messageInput.value = '';
+            var message = messageInput.value.trim(); // Trim the message to remove whitespace
+
+            if (message) {
+                socket.emit('message', { room: currentRoom, name: name, message: message });
+                messageInput.value = ''; // Clear the input field after sending
+            }
+        }
+
+        document.getElementById('messageInput').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); // Prevent the default action to avoid line break
+                sendMessage(); // Call your existing sendMessage function
+            }
+        });
+
+        function scrollToBottom() {
+            var chatBox = document.getElementById('chatBox');
+            chatBox.scrollTop = chatBox.scrollHeight - chatBox.clientHeight;
         }
 
         socket.on('typing', function (data) {
             var typingIndicator = document.getElementById('typingIndicator');
+            var typingIndicatorContainer = document.getElementById('typingIndicatorContainer');
             typingIndicator.innerText = data;
+            typingIndicatorContainer.style.display = 'block'; // Show the container
             setTimeout(() => {
-                typingIndicator.innerText = '';
+                typingIndicatorContainer.style.display = 'none'; // Hide the container
             }, 3000);
         });
 
         socket.on('message', function (data) {
             var chatBox = document.getElementById('chatBox');
             var messageClass = data.name === name ? 'message sent' : 'message received';
-            chatBox.innerHTML += `<div class="${messageClass}"><strong>${data.name}:</strong> ${data.message}</div>`;
+            chatBox.insertAdjacentHTML('afterbegin', `<div class="${messageClass}"><strong>${data.name}:</strong> ${data.message}</div>`);
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
