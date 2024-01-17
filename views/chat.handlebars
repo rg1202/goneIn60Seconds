@@ -18,6 +18,22 @@
             padding: 20px;
         }
 
+        welcome-message {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #009688; /* Teal background */
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .welcome-message h1 {
+            font-size: 24px;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
         #chatBox {
             display: flex;
             flex-direction: column-reverse;
@@ -82,7 +98,9 @@
 
 <body>
     <div class="container">
+        <div class="welcome-message">
         <h1>Welcome to Web Development Chat, {{name}}!</h1>
+    </div>
         <div class="input-field">
             <select id="roomSelect">
                 <option value="" disabled selected>Choose your room</option>
