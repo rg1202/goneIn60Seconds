@@ -1,16 +1,24 @@
-<div class="post" id="postNum{{this.id}}">
-    <h2 class="postTitle">{{this.post_title}}</h2>
-    <p class="postBody">{{this.post_body}}</p>
-    <p class="postAuthor">{{user.name}}</p>
-    <form class="postComment-form" id="parentPost{{this.id}}">
-        <textarea class="newCommentBody" placeholder="Penny for your thoughts?"></textarea>
-        <button class="btn btn-primary" type="submit">Comment</button>
-    </form>
-    <div class="postComments">
-        {{#each comments}}
-            <p class="comment">{{this.comment_body}}</p>
-            {{!-- TODO: Figure out how to render comment author. Not currently functional --}}
-            <p class="commentAuthor">{{user.name}}</p>
-        {{/each}}
+<div class="post card blue-grey darken-1" id="postNum{{this.id}}">
+    <div class="card-content white-text">
+        <h2 class="postTitle">{{this.post_title}}</h2>
+        <h4 class="postBody">{{this.post_body}}</h4>
+        <p class="postAuthor">{{user.name}}</p>
+        <span class="card-title btn activator">Comments</span>
+    </div>
+    <div class="postComments card-reveal">
+        <span class="card-title btn">Back to post</span>
+        <form class="postComment-form" id="parentPost{{this.id}}">
+            <textarea class="newCommentBody" placeholder="Penny for your thoughts?"></textarea>
+            <button class="btn btn-primary" type="submit">Comment</button>
+        </form>
+        {{#if comments}}
+            {{#each comments}}
+                <p class="comment">{{this.comment_body}}</p>
+                {{!-- TODO: Figure out how to render comment author. Not currently functional --}}
+                <p class="commentAuthor">{{user.name}}</p>
+            {{/each}}
+        {{else}}
+            <p class="comment">No comments yet!</p>
+        {{/if}}
     </div>
 </div>
